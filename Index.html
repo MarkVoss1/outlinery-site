@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Outlinery | Independent Publishing</title>
+    <style>
+        /* Importing Fonts: Playfair (Headers) and Lato (Body) */
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap');
+
+        /* --- CORE VARIABLES --- */
+        :root {
+            --brand-dark: #1a1a1a;
+            --brand-accent: #e76f51; /* Warm creative orange */
+            --bg-color: #ffffff;
+            --bg-off-white: #faf9f6;
+            --text-main: #2c3e50;
+            --amazon-yellow: #ffd814;
+            --amazon-orange: #fa8900;
+        }
+
+        * { box-sizing: border-box; }
+        
+        body {
+            font-family: 'Lato', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            background-color: #fff;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 10px rgba(0,0,0,0.05);
+            border-bottom: 1px solid #eee;
+        }
+
+        .brand-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--brand-dark);
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            /* Removed lowercase transformation */
+        }
+        
+        .nav-links { display: flex; gap: 20px; }
+
+        .nav-links button {
+            background: none;
+            border: none;
+            color: #555;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .nav-links button:hover, .nav-links button.active { color: var(--brand-accent); }
+
+        /* --- SECTIONS --- */
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            position: relative;
+            height: 75vh;
+            min-height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: var(--brand-dark);
+        }
+
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.5; /* Darkened for text readability */
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.25rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            font-weight: 300;
+            opacity: 0.95;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .cta-btn {
+            background-color: white;
+            color: var(--brand-dark);
+            padding: 16px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        .cta-btn:hover {
+            background-color: var(--brand-accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* --- ABOUT US STRIP --- */
+        .about-strip {
+            background-color: var(--bg-off-white);
+            padding: 4rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+        .about-strip h2 { font-family: 'Playfair Display', serif; margin-bottom: 1rem; font-size: 2rem; }
+        .about-strip p { max-width: 700px; margin: 0 auto; line-height: 1.8; color: #555; font-size: 1.1rem; }
+
+        /* --- CATALOGUE GRID --- */
+        .catalogue-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem;
+        }
+
+        .grid-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .grid-header h2 { font-family: 'Playfair Display', serif; font-size: 2.5rem; margin: 0; }
+        .grid-header p { color: #888; margin-top: 10px; }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 40px 30px;
+        }
+
+        .book-card {
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .book-card:hover { transform: translateY(-5px); }
+
+        .book-cover {
+            width: 100%;
+            aspect-ratio: 1/1.4;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 15px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+        }
+
+        .book-info h3 {
+            font-size: 1.1rem;
+            margin: 0 0 5px 0;
+            font-weight: 700;
+            color: var(--brand-dark);
+        }
+        .book-info .category {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #999;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .book-info .price {
+            color: var(--brand-accent);
+            font-weight: bold;
+        }
+
+        /* --- PRODUCT DETAIL VIEW --- */
+        .product-view {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: #666;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .product-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+
+        /* Gallery Styles */
+        .gallery-wrapper {
+            position: relative;
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+            aspect-ratio: 1/1;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .gallery-track {
+            display: flex;
+            height: 100%;
+            transition: transform 0.3s ease-out;
+        }
+        
+        .gallery-slide {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+        }
+
+        .gallery-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 15px 0;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
+        .dot.active { background: var(--brand-dark); }
+
+        /* Product Info Side */
+        .product-details h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin: 0 0 10px 0;
+        }
+        
+        .product-meta { color: #666; font-style: italic; margin-bottom: 1.5rem; }
+        
+        .product-desc {
+            line-height: 1.8;
+            color: #444;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1.5rem;
+        }
+
+        .amazon-box {
+            background: #fdfdfd;
+            border: 1px solid #eee;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .amz-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            transition: filter 0.2s;
+        }
+        .amz-cart { background-color: var(--amazon-yellow); color: #111; }
+        .amz-buy { background-color: var(--amazon-orange); color: #111; }
+        .amz-btn:hover { filter: brightness(0.95); }
+
+        /* Footer */
+        footer {
+            background-color: var(--brand-dark);
+            color: white;
+            text-align: center;
+            padding: 3rem 1rem;
+            margin-top: 4rem;
+        }
+
+        /* Desktop Layout */
+        @media(min-width: 768px) {
+            .product-layout { grid-template-columns: 1.2fr 1fr; gap: 4rem; }
+            .hero-content h1 { font-size: 4.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="brand-logo" onclick="router('home')">The Outlinery</div>
+        <div class="nav-links">
+            <button id="nav-home" class="active" onclick="router('home')">Home</button>
+            <button id="nav-shop" onclick="router('shop')">Shop</button>
+        </div>
+    </nav>
+
+    <!-- VIEW: HOME -->
+    <section id="view-home" class="view-section active">
+        <!-- Hero with "Girl Coloring" Image -->
+        <div class="hero">
+            <!-- Specific Unsplash image of a creative, happy coloring scene -->
+            <img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?q=80&w=1600&auto=format&fit=crop" class="hero-bg" alt="Girl coloring happily on the floor">
+            
+            <div class="hero-content">
+                <h1>Creativity Starts Here</h1>
+                <p>Color your world with our exclusive collection of hand-drawn journals and activity books.</p>
+                <button class="cta-btn" onclick="router('shop')">View Catalogue</button>
+            </div>
+        </div>
+
+        <!-- Brand Intro / About Us -->
+        <div class="about-strip">
+            <h2>Welcome to The Outlinery</h2>
+            <p>
+                We are an independent publishing firm who designs coloring books, 
+                activity books, journals, and notebooks in-house with our talented artists.
+                <br><br>
+                Whether you need to organize your day or find a peaceful escape through art, 
+                our books are crafted to inspire.
+            </p>
+        </div>
+    </section>
+
+    <!-- VIEW: SHOP / CATALOGUE -->
+    <section id="view-shop" class="view-section">
+        <div class="catalogue-container">
+            <div class="grid-header">
+                <h2>Our Collection</h2>
+                <p>Browse books designed for mindfulness and fun.</p>
+            </div>
+            
+            <div class="book-grid" id="product-grid">
+                <!-- Javascript will inject books here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- VIEW: PRODUCT DETAIL -->
+    <section id="view-product" class="view-section">
+        <div class="product-view">
+            <a href="#" class="back-link" onclick="router('shop'); return false;">&larr; Back to Shop</a>
+            
+            <div class="product-layout">
+                <!-- Gallery Left -->
+                <div>
+                    <div class="gallery-wrapper" id="gallery-touch-area">
+                        <div class="gallery-track" id="track">
+                            <!-- Slides -->
+                        </div>
+                        <!-- Arrows for Desktop -->
+                        <div style="position:absolute; top:50%; width:100%; display:flex; justify-content:space-between; padding:0 10px; transform:translateY(-50%); pointer-events:none;">
+                            <button onclick="moveSlide(-1)" style="pointer-events:all; background:white; border:none; width:40px; height:40px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.2); cursor:pointer;">&larr;</button>
+                            <button onclick="moveSlide(1)" style="pointer-events:all; background:white; border:none; width:40px; height:40px; border-radius:50%; box-shadow:0 2px 5px rgba(0,0,0,0.2); cursor:pointer;">&rarr;</button>
+                        </div>
+                    </div>
+                    <div class="gallery-dots" id="dots-container"></div>
+                </div>
+
+                <!-- Info Right -->
+                <div class="product-details">
+                    <h1 id="p-title">Book Title</h1>
+                    <div class="product-meta">By The Outlinery Team &bull; In Stock</div>
+                    <div id="p-price" style="font-size: 1.5rem; color: #b12704; font-weight: bold; margin-bottom: 20px;">$9.99</div>
+                    
+                    <div id="p-desc" class="product-desc">
+                        Description loading...
+                    </div>
+
+                    <div class="amazon-box">
+                        <a href="#" id="btn-cart" target="_blank" class="amz-btn amz-cart">Add to Cart</a>
+                        <a href="#" id="btn-buy" target="_blank" class="amz-btn amz-buy">Buy Now</a>
+                        <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">
+                            Secure transaction via Amazon.in
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div style="font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 1rem;">The Outlinery</div>
+        <p>&copy; 2026 The Outlinery. All rights reserved.</p>
+    </footer>
+
+    <script>
+        /* --- MOCK DATA --- */
+        const inventory = [
+            {
+                id: 1,
+                title: "Bloom: Floral Coloring Book",
+                category: "Coloring Book",
+                price: "₹399.00",
+                desc: "Escape into a garden of tranquility. Features 50 single-sided pages of intricate floral mandalas and garden scenes. Heavyweight paper suitable for gel pens and markers.",
+                link: "https://amazon.in",
+                images: ["Front Cover", "Page 1", "Page 2", "Back Cover"]
+            },
+            {
+                id: 2,
+                title: "The Daily Stoic Journal",
+                category: "Journal",
+                price: "₹499.00",
+                desc: "A guided journal for clarity and mindfulness. Includes daily prompts, dotted grid areas for sketching, and inspirational quotes to start your morning right.",
+                link: "https://amazon.in",
+                images: ["Front Cover", "Writing Prompt", "Grid View", "Spine"]
+            },
+            {
+                id: 3,
+                title: "Kids Activity Pack: Space",
+                category: "Activity Book",
+                price: "₹299.00",
+                desc: "Blast off with mazes, word searches, and connect-the-dots! Designed for ages 5-10 to improve problem-solving skills while having fun.",
+                link: "https://amazon.in",
+                images: ["Front Cover", "Maze Example", "Puzzle Page", "Back Cover"]
+            },
+            {
+                id: 4,
+                title: "Mandala Masterclass",
+                category: "Coloring Book",
+                price: "₹450.00",
+                desc: "Our most popular advanced coloring book. Complex geometric patterns designed to induce a meditative state.",
+                link: "https://amazon.in",
+                images: ["Front Cover", "Mandala 1", "Mandala 2", "Close Up"]
+            },
+             {
+                id: 5,
+                title: "Classic Sketchpad",
+                category: "Sketching",
+                price: "₹350.00",
+                desc: "100 pages of high-quality cartridge paper. Perfect for charcoal, graphite, and light watercolor work.",
+                link: "https://amazon.in",
+                images: ["Front Cover", "Texture Close Up", "Sketch Demo", "Back Cover"]
+            }
+        ];
+
+        let currentProduct = null;
+        let slideIndex = 0;
+
+        window.onload = function() {
+            renderGrid();
+        };
+
+        /* --- ROUTER --- */
+        function router(viewName, productId) {
+            // Hide all
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
+
+            // Show selected
+            if(viewName === 'product' && productId) {
+                loadProduct(productId);
+                document.getElementById('view-product').classList.add('active');
+                document.getElementById('nav-shop').classList.add('active'); // Keep shop active in nav
+            } else {
+                document.getElementById('view-' + viewName).classList.add('active');
+                const navBtn = document.getElementById('nav-' + viewName);
+                if(navBtn) navBtn.classList.add('active');
+            }
+            window.scrollTo(0,0);
+        }
+
+        /* --- RENDER GRID --- */
+        function renderGrid() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+
+            inventory.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.onclick = () => router('product', item.id);
+
+                // Placeholder SVG logic
+                card.innerHTML = `
+                    <div class="book-cover">
+                         <div style="text-align:center;">
+                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" style="margin-bottom:10px;">
+                                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                                <path d="M12 18h.01"></path>
+                            </svg>
+                            <span style="font-family:'Playfair Display'; font-size:1.1rem; display:block; color:#555; padding:0 10px;">${item.title.substring(0,12)}...</span>
+                         </div>
+                    </div>
+                    <div class="book-info">
+                        <span class="category">${item.category}</span>
+                        <h3>${item.title}</h3>
+                        <div class="price">${item.price}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        /* --- LOAD PRODUCT DETAIL --- */
+        function loadProduct(id) {
+            currentProduct = inventory.find(p => p.id === id);
+            
+            document.getElementById('p-title').innerText = currentProduct.title;
+            document.getElementById('p-price').innerText = currentProduct.price;
+            document.getElementById('p-desc').innerText = currentProduct.desc;
+            document.getElementById('btn-cart').href = currentProduct.link;
+            document.getElementById('btn-buy').href = currentProduct.link;
+
+            setupGallery(currentProduct.images);
+        }
+
+        /* --- GALLERY LOGIC --- */
+        function setupGallery(images) {
+            const track = document.getElementById('track');
+            const dots = document.getElementById('dots-container');
+            track.innerHTML = '';
+            dots.innerHTML = '';
+            slideIndex = 0;
+
+            images.forEach((img, idx) => {
+                const slide = document.createElement('div');
+                slide.className = 'gallery-slide';
+                // Placeholder Slide Content
+                slide.innerHTML = `
+                <div style="text-align:center; color:#888;">
+                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                        <polyline points="21 15 16 10 5 21"></polyline>
+                    </svg>
+                    <div style="margin-top:10px;">${img}</div>
+                </div>
+                `;
+                track.appendChild(slide);
+
+                const dot = document.createElement('div');
+                dot.className = idx === 0 ? 'dot active' : 'dot';
+                dots.appendChild(dot);
+            });
+            updateGallery();
+        }
+
+        function moveSlide(n) {
+            const total = currentProduct.images.length;
+            slideIndex += n;
+            if(slideIndex >= total) slideIndex = 0;
+            if(slideIndex < 0) slideIndex = total - 1;
+            updateGallery();
+        }
+
+        function updateGallery() {
+            const track = document.getElementById('track');
+            track.style.transform = `translateX(-${slideIndex * 100}%)`;
+            
+            document.querySelectorAll('.dot').forEach((d, i) => {
+                d.classList.toggle('active', i === slideIndex);
+            });
+        }
+
+        /* --- TOUCH SWIPE --- */
+        let xDown = null;
+        const touchArea = document.getElementById('gallery-touch-area');
+        
+        touchArea.addEventListener('touchstart', (evt) => { xDown = evt.touches[0].clientX; }, false);
+        touchArea.addEventListener('touchmove', (evt) => {
+            if (!xDown) return;
+            let xUp = evt.touches[0].clientX;
+            let xDiff = xDown - xUp;
+
+            if (Math.abs(xDiff) > 50) { // Threshold
+                if (xDiff > 0) moveSlide(1); // Left swipe
+                else moveSlide(-1); // Right swipe
+                xDown = null;
+            }
+        }, false);
+
+    </script>
+</body>
+</html>
