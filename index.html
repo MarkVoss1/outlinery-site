@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Outlinery | Independent Publishing</title>
     <style>
-        /* Importing Fonts: Playfair (Headers) and Lato (Body) */
+        /* Importing Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@300;400;700&display=swap');
 
         /* --- CORE VARIABLES --- */
         :root {
             --brand-dark: #1a1a1a;
-            --brand-accent: #e76f51; /* Warm creative orange */
+            --brand-accent: #e76f51; 
             --bg-color: #ffffff;
             --bg-off-white: #faf9f6;
             --text-main: #2c3e50;
@@ -50,7 +50,6 @@
             color: var(--brand-dark);
             cursor: pointer;
             letter-spacing: 0.5px;
-            /* Removed lowercase transformation */
         }
         
         .nav-links { display: flex; gap: 20px; }
@@ -91,7 +90,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0.5; /* Darkened for text readability */
+            opacity: 0.5;
         }
 
         .hero-content {
@@ -166,7 +165,7 @@
 
         .book-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 40px 30px;
         }
 
@@ -178,16 +177,20 @@
 
         .book-cover {
             width: 100%;
-            aspect-ratio: 1/1.4;
+            aspect-ratio: 1/1; /* Square format based on Book 1 description */
             background-color: #f0f0f0;
             border-radius: 4px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             margin-bottom: 15px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #888;
+            position: relative;
+        }
+        
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; 
+            /* Changed to cover so it fills the square nicely */
         }
 
         .book-info h3 {
@@ -195,6 +198,7 @@
             margin: 0 0 5px 0;
             font-weight: 700;
             color: var(--brand-dark);
+            line-height: 1.4;
         }
         .book-info .category {
             font-size: 0.8rem;
@@ -207,11 +211,12 @@
         .book-info .price {
             color: var(--brand-accent);
             font-weight: bold;
+            margin-top: 5px;
         }
 
         /* --- PRODUCT DETAIL VIEW --- */
         .product-view {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             padding: 2rem 1rem;
         }
@@ -227,7 +232,7 @@
         .product-layout {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 3rem;
         }
 
         /* Gallery Styles */
@@ -255,6 +260,12 @@
             justify-content: center;
             background: #fff;
         }
+        
+        .gallery-slide img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
 
         .gallery-dots {
             display: flex;
@@ -270,6 +281,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 2.2rem;
             margin: 0 0 10px 0;
+            line-height: 1.2;
         }
         
         .product-meta { color: #666; font-style: italic; margin-bottom: 1.5rem; }
@@ -280,25 +292,28 @@
             margin-bottom: 2rem;
             border-bottom: 1px solid #eee;
             padding-bottom: 1.5rem;
+            white-space: pre-wrap; /* Preserves paragraph spacing */
         }
 
         .amazon-box {
             background: #fdfdfd;
             border: 1px solid #eee;
-            padding: 20px;
+            padding: 25px;
             border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
         .amz-btn {
             display: block;
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             text-align: center;
             text-decoration: none;
             border-radius: 50px;
             font-weight: 600;
             margin-bottom: 12px;
             transition: filter 0.2s;
+            font-size: 1.1rem;
         }
         .amz-cart { background-color: var(--amazon-yellow); color: #111; }
         .amz-buy { background-color: var(--amazon-orange); color: #111; }
@@ -315,7 +330,7 @@
 
         /* Desktop Layout */
         @media(min-width: 768px) {
-            .product-layout { grid-template-columns: 1.2fr 1fr; gap: 4rem; }
+            .product-layout { grid-template-columns: 1fr 1fr; gap: 4rem; }
             .hero-content h1 { font-size: 4.5rem; }
         }
     </style>
@@ -333,9 +348,7 @@
 
     <!-- VIEW: HOME -->
     <section id="view-home" class="view-section active">
-        <!-- Hero with "Girl Coloring" Image -->
         <div class="hero">
-            <!-- Specific Unsplash image of a creative, happy coloring scene -->
             <img src="https://images.unsplash.com/photo-1596464716127-f2a82984de30?q=80&w=1600&auto=format&fit=crop" class="hero-bg" alt="Girl coloring happily on the floor">
             
             <div class="hero-content">
@@ -345,7 +358,6 @@
             </div>
         </div>
 
-        <!-- Brand Intro / About Us -->
         <div class="about-strip">
             <h2>Welcome to The Outlinery</h2>
             <p>
@@ -405,9 +417,9 @@
 
                     <div class="amazon-box">
                         <a href="#" id="btn-cart" target="_blank" class="amz-btn amz-cart">Add to Cart</a>
-                        <a href="#" id="btn-buy" target="_blank" class="amz-btn amz-buy">Buy Now</a>
+                        <a href="#" id="btn-buy" target="_blank" class="amz-btn amz-buy">Buy on Amazon</a>
                         <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">
-                            Secure transaction via Amazon.in
+                            Secure transaction via Amazon.com
                         </p>
                     </div>
                 </div>
@@ -421,52 +433,35 @@
     </footer>
 
     <script>
-        /* --- MOCK DATA --- */
+        /* --- REAL INVENTORY DATA --- */
         const inventory = [
             {
                 id: 1,
-                title: "Bloom: Floral Coloring Book",
+                title: "Christmas Coloring Book: 50 Bold and Easy-to-Color Festive Scenes",
                 category: "Coloring Book",
-                price: "₹399.00",
-                desc: "Escape into a garden of tranquility. Features 50 single-sided pages of intricate floral mandalas and garden scenes. Heavyweight paper suitable for gel pens and markers.",
-                link: "https://amazon.in",
-                images: ["Front Cover", "Page 1", "Page 2", "Back Cover"]
+                price: "$7.99",
+                // Note: I replaced newlines with actual line breaks for the HTML logic
+                desc: "Unwrap hours of festive fun this holiday season!\n\nBring the magic of Christmas to life with the Christmas Coloring Book! Perfect for ages 6 and up, this Christmas-themed coloring book features 50 bold and easy-to-color festive scenes that will spark creativity and holiday cheer. It’s designed to provide hours of fun and keep the holiday excitement alive.\n\nEach page is simple enough to complete in one sitting, whether you are looking for a screen-free activity for a snowy afternoon or a way to calm excited minds before the big day.\n\nWhy you and your child will love this book:\n• 50 Unique Illustrations: No repeats! Packed with Reindeer, Snowmen, Ornaments, Gingerbread houses, and more.\n• Bold & Easy Designs: Thick lines make coloring satisfying for kids (and relaxing for adults!) without being too babyish.\n• Single-Sided Pages: Every image is placed on its own page to prevent bleed-through issues, making it ideal for markers, gel pens, and colored pencils.\n• Perfect Square Format: The 8.5 x 8.5-inch size is easy for little hands to manage and looks great under the tree.\n\nThe Perfect Holiday Gift!\nThis coloring book makes an ideal stocking stuffer, Secret Santa gift, or classroom holiday treat for young artists.",
+                link: "https://www.amazon.com/dp/B0DQJ9T211",
+                images: ["images/book1-front.jpg", "images/book1-back.jpg"] 
             },
             {
                 id: 2,
-                title: "The Daily Stoic Journal",
-                category: "Journal",
-                price: "₹499.00",
-                desc: "A guided journal for clarity and mindfulness. Includes daily prompts, dotted grid areas for sketching, and inspirational quotes to start your morning right.",
-                link: "https://amazon.in",
-                images: ["Front Cover", "Writing Prompt", "Grid View", "Spine"]
+                title: "Romantic Valentine Coloring Book: 48 Relaxing and Easy Romantic Illustrations",
+                category: "Coloring Book",
+                price: "$7.99",
+                desc: "💖 Celebrate Love with the Perfect Romantic Valentine Coloring Book! 💖\n\nLooking for a relaxing and heartwarming way to embrace the spirit of love? This Romantic Valentine Coloring Book features 48 beautifully designed illustrations of romantic scenes, heartfelt moments, and love-themed objects—perfect for sparking joy and creativity.\n\n🌹 Why You’ll Love This Coloring Book:\n✔ Relaxation & Creativity – Escape stress and unwind while bringing these lovely scenes to life.\n✔ Romantic & Heartfelt Designs – Enjoy charming illustrations of couples, dreamy settings, and love-filled symbols.\n✔ Perfect for All Skill Levels – Designed for teens, adults, and seniors, whether you're a beginner or an expert.\n✔ A Thoughtful Gift for Loved Ones – Makes a unique Valentine’s Day, anniversary, or birthday gift, stocking stuffer, or a fun treat for young artists and creative souls alike.\n✔ Fun & Engaging – Each page is simple enough to complete in one sitting, making it perfect for cozy afternoons or creative family activities.\n\n🎨 What’s Inside:\n📌 48 Beautiful Coloring Pages – Featuring romantic settings, heartfelt decorations, and love-inspired objects.\n📌 Single-Sided Pages – Prevents bleed-through, making it easy to use markers, crayons, or colored pencils.\n📌 Convenient 8.25 x 11-inch Format – Spacious yet portable, ideal for easy handling and coloring fun anywhere.\n\n🖌 Helpful Coloring Tips:\n✔ Use a hard sheet or board behind the coloring page to avoid bleed-through.\n✔ Avoid using markers that may smudge on detailed designs.\n\n📖 💘 Now available in both hardcover and paperback!\nDesigned for ages 12 and up, this special edition captures the joy of love and artistic expression.\n\n💘 Grab your copy today and color your way into a world of love and romance!",
+                link: "https://www.amazon.com/dp/B0DVZP3Y3B",
+                images: ["images/book2-front.jpg", "images/book2-back.jpg"] 
             },
             {
                 id: 3,
-                title: "Kids Activity Pack: Space",
-                category: "Activity Book",
-                price: "₹299.00",
-                desc: "Blast off with mazes, word searches, and connect-the-dots! Designed for ages 5-10 to improve problem-solving skills while having fun.",
-                link: "https://amazon.in",
-                images: ["Front Cover", "Maze Example", "Puzzle Page", "Back Cover"]
-            },
-            {
-                id: 4,
-                title: "Mandala Masterclass",
-                category: "Coloring Book",
-                price: "₹450.00",
-                desc: "Our most popular advanced coloring book. Complex geometric patterns designed to induce a meditative state.",
-                link: "https://amazon.in",
-                images: ["Front Cover", "Mandala 1", "Mandala 2", "Close Up"]
-            },
-             {
-                id: 5,
-                title: "Classic Sketchpad",
-                category: "Sketching",
-                price: "₹350.00",
-                desc: "100 pages of high-quality cartridge paper. Perfect for charcoal, graphite, and light watercolor work.",
-                link: "https://amazon.in",
-                images: ["Front Cover", "Texture Close Up", "Sketch Demo", "Back Cover"]
+                title: "Lined Writing Journal: Notebook for Women and Men, 164 Pages, 8.5” x 11 Inches",
+                category: "Journal",
+                price: "$6.99",
+                desc: "The Ultimate Hybrid Journal and Notebook for Every Occasion! 📘\n\nWhether you’re jotting down notes for class, organizing work tasks, or planning your next big idea, this lined hybrid journal and notebook has you covered. As your daily companion to organize your life and unlock your productivity, its stylish design and practical features make it perfect for students, professionals, and creative minds alike.\n\nWhy You’ll Love This Notebook:\n• Standard Letter Size (8.5 x 11 inches): Spacious enough for all your notes, yet perfectly portable to fit in your bag.\n• Beautiful Cover Design: Features a gorgeous geometric pattern with elegant circles and curved lines, making it a perfect gift for any occasion.\n• Versatile Usage: Great for note-taking in school or college, journaling, brainstorming, or personal writing like meal recipes, mood tracking, and password storage.\n• High-Quality Paper: Smooth, lined pages that work perfectly with pens, pencils, or markers.\n• Perfect for Gifting: Makes an excellent graduation gift, Mother’s Day gift, Christmas gift, New Year’s gift, or birthday gift.\n\n👉 Order yours now and take the first step toward staying organized and inspired!",
+                link: "https://www.amazon.com/dp/B0DRGFCQ95",
+                images: ["images/book3-front.jpg", "images/book3-back.jpg"] 
             }
         ];
 
@@ -479,21 +474,26 @@
 
         /* --- ROUTER --- */
         function router(viewName, productId) {
-            // Hide all
             document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('nav button').forEach(el => el.classList.remove('active'));
 
-            // Show selected
             if(viewName === 'product' && productId) {
                 loadProduct(productId);
                 document.getElementById('view-product').classList.add('active');
-                document.getElementById('nav-shop').classList.add('active'); // Keep shop active in nav
+                document.getElementById('nav-shop').classList.add('active');
             } else {
                 document.getElementById('view-' + viewName).classList.add('active');
                 const navBtn = document.getElementById('nav-' + viewName);
                 if(navBtn) navBtn.classList.add('active');
             }
             window.scrollTo(0,0);
+        }
+
+        /* --- ERROR HANDLER --- */
+        function handleImageError(img) {
+            img.style.display = 'none';
+            // Simple robust fallback
+            img.parentElement.innerHTML = '<div style="text-align:center; padding:10px; color:#aaa;">Image Not Found</div>';
         }
 
         /* --- RENDER GRID --- */
@@ -506,16 +506,12 @@
                 card.className = 'book-card';
                 card.onclick = () => router('product', item.id);
 
-                // Placeholder SVG logic
+                // We try to use the first image. If it fails (file not found), it shows a gray box.
+                const coverImage = item.images.length > 0 ? item.images[0] : '';
+
                 card.innerHTML = `
                     <div class="book-cover">
-                         <div style="text-align:center;">
-                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5" style="margin-bottom:10px;">
-                                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-                                <path d="M12 18h.01"></path>
-                            </svg>
-                            <span style="font-family:'Playfair Display'; font-size:1.1rem; display:block; color:#555; padding:0 10px;">${item.title.substring(0,12)}...</span>
-                         </div>
+                        <img src="${coverImage}" alt="${item.title} Cover" loading="lazy" onerror="handleImageError(this)">
                     </div>
                     <div class="book-info">
                         <span class="category">${item.category}</span>
@@ -551,17 +547,7 @@
             images.forEach((img, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'gallery-slide';
-                // Placeholder Slide Content
-                slide.innerHTML = `
-                <div style="text-align:center; color:#888;">
-                     <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <circle cx="8.5" cy="8.5" r="1.5"></circle>
-                        <polyline points="21 15 16 10 5 21"></polyline>
-                    </svg>
-                    <div style="margin-top:10px;">${img}</div>
-                </div>
-                `;
+                slide.innerHTML = `<img src="${img}" alt="${currentProduct.title} - View ${idx + 1}" loading="lazy" onerror="handleImageError(this)">`;
                 track.appendChild(slide);
 
                 const dot = document.createElement('div');
@@ -598,9 +584,9 @@
             let xUp = evt.touches[0].clientX;
             let xDiff = xDown - xUp;
 
-            if (Math.abs(xDiff) > 50) { // Threshold
-                if (xDiff > 0) moveSlide(1); // Left swipe
-                else moveSlide(-1); // Right swipe
+            if (Math.abs(xDiff) > 50) { 
+                if (xDiff > 0) moveSlide(1); 
+                else moveSlide(-1);
                 xDown = null;
             }
         }, false);
