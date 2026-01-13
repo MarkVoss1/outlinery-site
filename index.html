@@ -90,6 +90,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center; /* Ensures center alignment on wide screens */
             opacity: 0.5;
         }
 
@@ -286,7 +287,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.9);
+            background-color: rgba(0,0,0,0.95);
             justify-content: center;
             align-items: center;
             animation: fadeIn 0.3s;
@@ -294,10 +295,10 @@
         .lightbox.active { display: flex; }
         
         .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
+            max-width: 85%;
+            max-height: 85%;
             object-fit: contain;
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
         }
         
         .lightbox-close {
@@ -307,10 +308,28 @@
             color: white;
             font-size: 40px;
             cursor: pointer;
-            z-index: 10001;
+            z-index: 10002;
             transition: color 0.2s;
         }
         .lightbox-close:hover { color: var(--brand-accent); }
+
+        .lightbox-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            font-size: 30px;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 50%;
+            z-index: 10001;
+            transition: background 0.3s;
+        }
+        .lightbox-nav:hover { background: rgba(255,255,255,0.3); }
+        .lightbox-nav.prev { left: 20px; }
+        .lightbox-nav.next { right: 20px; }
 
         /* Product Info Side */
         .product-details h1 {
@@ -351,7 +370,7 @@
             transition: filter 0.2s;
             font-size: 1.1rem;
         }
-        .amz-cart { background-color: var(--amazon-yellow); color: #111; }
+        /* Cart button style removed as per request */
         .amz-buy { background-color: var(--amazon-orange); color: #111; }
         .amz-btn:hover { filter: brightness(0.95); }
 
@@ -472,6 +491,12 @@
             .hero-content h1 { font-size: 4.5rem; }
             .cookie-banner { flex-direction: row; text-align: left; }
         }
+
+        /* Mobile Fix for 20:9 Screens */
+        @media(max-width: 768px) {
+            .hero { height: 65vh; min-height: 450px; } /* Prevent extreme stretching */
+            .hero-bg { object-position: center bottom; } /* Anchor image to bottom for better framing */
+        }
     </style>
 </head>
 <body>
@@ -557,7 +582,7 @@
                     </div>
 
                     <div class="amazon-box">
-                        <a href="#" id="btn-cart" target="_blank" class="amz-btn amz-cart">Add to Cart</a>
+                        <!-- Add to Cart removed -->
                         <a href="#" id="btn-buy" target="_blank" class="amz-btn amz-buy">Buy on Amazon</a>
                         <p style="text-align:center; font-size:0.8rem; color:#666; margin-top:10px;">
                             Secure transaction via Amazon.com
@@ -599,8 +624,10 @@
     </div>
 
     <!-- LIGHTBOX HTML -->
-    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
-        <span class="lightbox-close">&times;</span>
+    <div id="lightbox" class="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <button class="lightbox-nav prev" onclick="changeLightbox(-1)">&#10094;</button>
+        <button class="lightbox-nav next" onclick="changeLightbox(1)">&#10095;</button>
         <img id="lightbox-img" src="">
     </div>
 
@@ -631,7 +658,7 @@
                 title: "Lined Writing Journal: Notebook for Women and Men, 164 Pages, 8.5” x 11 Inches",
                 category: "Journal",
                 price: "$6.99",
-                desc: "The Ultimate Hybrid Journal and Notebook for Every Occasion! 📘\n\nWhether you’re jotting down notes for class, organizing work tasks, or planning your next big idea, this lined hybrid journal and notebook has you covered. As your daily companion to organize your life and unlock your productivity, its stylish design and practical features make it perfect for students, professionals, and creative minds alike.\n\nWhy You’ll Love This Notebook:\n• Standard Letter Size (8.5 x 11 inches): Spacious enough for all your notes, yet perfectly portable to fit in your bag.\n• Beautiful Cover Design: Features a gorgeous geometric pattern with elegant circles and curved lines, making it a perfect gift for any occasion.\n• Versatile Usage: Great for note-taking in school or college, journaling, brainstorming, or personal writing like meal recipes, mood tracking, and password storage.\n• High-Quality Paper: Smooth, lined pages that work perfectly with pens, pencils, or markers.\n• Perfect for Gifting: Makes an excellent graduation gift, Mother’s Day gift, Christmas gift, New Year’s gift, or birthday gift.\n\n👉 Order yours now and take the first step toward staying organized and inspired!",
+                desc: "The Ultimate Hybrid Journal and Notebook for Every Occasion! 📘\n\nWhether you’re jotting down notes for class, organizing work tasks, or planning your next big idea, this lined hybrid journal and notebook has you covered. As your daily companion to organize your life and unlock your productivity, its stylish design and practical features make it perfect for students, professionals, and creative minds alike.\n\nWhy You’ll Love This Notebook:\n• Standard Letter Size (8.5 x 11 inches): Spacious enough for all your notes, yet perfectly portable to fit in your bag.\n• Beautiful Cover Design: Features a gorgeous geometric pattern with elegant circles and curved lines, making it a perfect gift for any occasion.\n• Versatile Usage: Great for note-taking in school or college, journaling, brainstorming, or personal writing like meal recipes, mood tracking, and password storage.\n• High-Quality Paper: Smooth, lined pages that work perfectly with pens, pencils, or markers.\n• Perfect for Gifting: Makes an excellent graduation gift, Mothers Day gift, Christmas gift, New Years gift, or birthday gift.\n\n👉 Order yours now and take the first step toward staying organized and inspired!",
                 link: "https://www.amazon.com/dp/B0DRGFCQ95",
                 images: ["images/book3-front.jpg", "images/book3-back.jpg"] 
             }
@@ -639,6 +666,7 @@
 
         let currentProduct = null;
         let slideIndex = 0;
+        let currentLightboxIndex = 0;
 
         window.onload = function() {
             renderGrid();
@@ -704,7 +732,7 @@
             document.getElementById('p-title').innerText = currentProduct.title;
             document.getElementById('p-price').innerText = currentProduct.price;
             document.getElementById('p-desc').innerText = currentProduct.desc;
-            document.getElementById('btn-cart').href = currentProduct.link;
+            // Removed cart button update
             document.getElementById('btn-buy').href = currentProduct.link;
 
             setupGallery(currentProduct.images);
@@ -721,8 +749,8 @@
             images.forEach((img, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'gallery-slide';
-                // UPDATED: Added click event to open lightbox
-                slide.innerHTML = `<img src="${img}" onerror="handleImageError(this)" onclick="openLightbox('${img}')">`;
+                // Updated to pass index to openLightbox
+                slide.innerHTML = `<img src="${img}" onerror="handleImageError(this)" onclick="openLightbox(${idx})">`;
                 track.appendChild(slide);
 
                 const dot = document.createElement('div');
@@ -750,15 +778,31 @@
         }
 
         /* --- LIGHTBOX FUNCTIONS --- */
-        function openLightbox(src) {
+        function openLightbox(index) {
+            currentLightboxIndex = index;
             const lightbox = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            img.src = src;
+            updateLightboxImage();
             lightbox.classList.add('active');
         }
 
         function closeLightbox() {
             document.getElementById('lightbox').classList.remove('active');
+        }
+
+        function changeLightbox(direction) {
+            if (!currentProduct) return;
+            const total = currentProduct.images.length;
+            currentLightboxIndex += direction;
+            
+            if(currentLightboxIndex >= total) currentLightboxIndex = 0;
+            if(currentLightboxIndex < 0) currentLightboxIndex = total - 1;
+            
+            updateLightboxImage();
+        }
+
+        function updateLightboxImage() {
+            const img = document.getElementById('lightbox-img');
+            img.src = currentProduct.images[currentLightboxIndex];
         }
 
         /* --- TOUCH SWIPE --- */
