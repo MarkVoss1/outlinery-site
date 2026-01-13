@@ -259,6 +259,7 @@
             align-items: center;
             justify-content: center;
             background: #fff;
+            cursor: zoom-in; /* Indicate clickable */
         }
         
         .gallery-slide img {
@@ -275,6 +276,41 @@
         }
         .dot { width: 10px; height: 10px; border-radius: 50%; background: #ddd; }
         .dot.active { background: var(--brand-dark); }
+
+        /* --- LIGHTBOX (FULLSCREEN IMAGE) --- */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s;
+        }
+        .lightbox.active { display: flex; }
+        
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            z-index: 10001;
+            transition: color 0.2s;
+        }
+        .lightbox-close:hover { color: var(--brand-accent); }
 
         /* Product Info Side */
         .product-details h1 {
@@ -319,7 +355,7 @@
         .amz-buy { background-color: var(--amazon-orange); color: #111; }
         .amz-btn:hover { filter: brightness(0.95); }
 
-        /* --- ADDED: NEWSLETTER SECTION CSS --- */
+        /* --- NEWSLETTER SECTION CSS --- */
         .newsletter-section {
             background: linear-gradient(135deg, #2c3e50, #4ca1af);
             color: white;
@@ -375,38 +411,51 @@
 
         .newsletter-form button:hover { transform: scale(1.05); }
 
-        /* --- ADDED: COOKIE BANNER CSS --- */
+        /* --- COOKIE BANNER CSS --- */
         .cookie-banner {
             position: fixed;
-            bottom: -100px; /* Hidden by default */
+            bottom: -150px; /* Hidden by default */
             left: 0;
             width: 100%;
             background: #222;
             color: white;
-            padding: 15px 20px;
+            padding: 20px;
             text-align: center;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
             z-index: 9999;
             transition: bottom 0.5s ease;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
-            font-size: 0.9rem;
-            flex-wrap: wrap;
+            font-size: 0.95rem;
         }
 
         .cookie-banner.show { bottom: 0; }
 
+        .cookie-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
         .cookie-btn {
-            background: white;
-            color: #222;
             border: none;
-            padding: 8px 20px;
+            padding: 10px 20px;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
+            font-size: 0.9rem;
+            transition: opacity 0.2s;
         }
+
+        .cookie-btn.accept { background: var(--brand-accent); color: white; }
+        .cookie-btn.manage { background: transparent; border: 1px solid #777; color: #ddd; }
+        .cookie-btn.decline { background: #444; color: #ccc; }
+        
+        .cookie-btn:hover { opacity: 0.9; }
 
         /* Footer */
         footer {
@@ -421,6 +470,7 @@
         @media(min-width: 768px) {
             .product-layout { grid-template-columns: 1fr 1fr; gap: 4rem; }
             .hero-content h1 { font-size: 4.5rem; }
+            .cookie-banner { flex-direction: row; text-align: left; }
         }
     </style>
 </head>
@@ -518,7 +568,7 @@
         </div>
     </section>
 
-    <!-- ADDED: NEWSLETTER SECTION -->
+    <!-- NEWSLETTER SECTION -->
     <section class="newsletter-section">
         <div class="newsletter-container">
             <h2>Join the Inner Circle</h2>
@@ -538,10 +588,20 @@
         <p>&copy; 2026 The Outlinery. All rights reserved.</p>
     </footer>
 
-    <!-- ADDED: COOKIE BANNER HTML -->
+    <!-- COOKIE BANNER HTML -->
     <div class="cookie-banner" id="cookie-banner">
         <span>We use cookies to ensure you get the best experience on our website.</span>
-        <button class="cookie-btn" onclick="acceptCookies()">Accept</button>
+        <div class="cookie-actions">
+            <button class="cookie-btn decline" onclick="declineCookies()">Decline</button>
+            <button class="cookie-btn manage" onclick="manageCookies()">Manage</button>
+            <button class="cookie-btn accept" onclick="acceptCookies()">Accept</button>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX HTML -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <span class="lightbox-close">&times;</span>
+        <img id="lightbox-img" src="">
     </div>
 
     <script>
@@ -661,7 +721,8 @@
             images.forEach((img, idx) => {
                 const slide = document.createElement('div');
                 slide.className = 'gallery-slide';
-                slide.innerHTML = `<img src="${img}" onerror="handleImageError(this)">`;
+                // UPDATED: Added click event to open lightbox
+                slide.innerHTML = `<img src="${img}" onerror="handleImageError(this)" onclick="openLightbox('${img}')">`;
                 track.appendChild(slide);
 
                 const dot = document.createElement('div');
@@ -688,6 +749,18 @@
             });
         }
 
+        /* --- LIGHTBOX FUNCTIONS --- */
+        function openLightbox(src) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = src;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+
         /* --- TOUCH SWIPE --- */
         let xDown = null;
         const touchArea = document.getElementById('gallery-touch-area');
@@ -705,18 +778,30 @@
             }
         }, false);
 
-        /* --- ADDED: COOKIE LOGIC --- */
+        /* --- COOKIE LOGIC (UPDATED) --- */
         function checkCookies() {
-            if (!localStorage.getItem('cookiesAccepted')) {
+            // Check if user has made ANY choice (accepted or declined)
+            if (!localStorage.getItem('cookieChoice')) {
                 setTimeout(() => document.getElementById('cookie-banner').classList.add('show'), 1000);
             }
         }
+
         function acceptCookies() {
-            localStorage.setItem('cookiesAccepted', 'true');
+            localStorage.setItem('cookieChoice', 'accepted');
             document.getElementById('cookie-banner').classList.remove('show');
         }
 
-        /* --- ADDED: SERVICE WORKER REGISTRATION --- */
+        function declineCookies() {
+            localStorage.setItem('cookieChoice', 'declined');
+            document.getElementById('cookie-banner').classList.remove('show');
+        }
+
+        function manageCookies() {
+            // Placeholder for management UI - usually implies opening a modal
+            alert("Cookie Management: You can clear your browser cookies to reset your choice.");
+        }
+
+        /* --- SERVICE WORKER REGISTRATION --- */
         function registerServiceWorker() {
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
@@ -729,7 +814,7 @@
             }
         }
 
-        /* --- ADDED: FORM HANDLING --- */
+        /* --- FORM HANDLING --- */
         document.getElementById('email-form').addEventListener('submit', function(e) {
             if(this.action.includes("YOUR_FORMSPREE_ID")) {
                 e.preventDefault();
